@@ -11,12 +11,6 @@
 (function () {
     'use strict';
 
-    // モジュールが読み込みできているか確認
-    if (typeof tetrisFumen === 'undefined') {
-        console.error('tetrisFumen is not defined');
-        return;
-    }
-
     // 色 → ミノ種類（大文字）へのマッピング
     const colorToTypeMap = {
         red: 'Z',
@@ -104,34 +98,19 @@
 
         document.body.appendChild(btn);
 
-        btn.addEventListener('click', () => {
-            try {
-                if (!board || !board.b) {
-                    alert('board.b が見つかりません。先にゲームを読み込んでください。');
-                    return;
-                }
-
-                // ネクスト情報の確認
-                const currentPiece = board.piece || null;
-                const nextQueue = board.queue || [];
-
-                console.log('[DEBUG] Current piece:', currentPiece);
-                console.log('[DEBUG] Next queue:', nextQueue);
-                console.log('[DEBUG] Current piece type:', pieceToType(currentPiece));
-                console.log('[DEBUG] Next queue types:', convertPiecesToTypes(nextQueue));
-
-                const url = boardToFumenURLWithNext(board.b, currentPiece, nextQueue);
-                console.log('[FUMEN WITH NEXT]', url);
-                prompt('Fumen URL をコピーしてください', url);
-            } catch (e) {
-                console.error(e);
-                alert('Fumen生成中にエラーが発生しました');
-            }
-        });
+        btn.addEventListener('click', handleExportClick);
     }
 
-    // ページ読み込み完了後にボタンを設置
-    window.addEventListener('load', () => {
-        setTimeout(createButton, 1000);  // ゲームが完全に読み込まれる時間を確保
-    });
+    function handleExportClick() {
+        try {
+            const url = boardToFumenURLWithNext(board.b, board.piece, board.queue);
+            console.log('[FUMEN WITH NEXT]', url);
+            window.open(url, '_blank');
+        } catch (e) {
+            console.error(e);
+            alert('Fumen生成中にエラーが発生しました');
+        }
+    };
+
+    createButton();
 })();
