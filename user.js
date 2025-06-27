@@ -60,24 +60,14 @@
         return result;
     }
 
-    // ボードをFumen URLに変換（ネクスト情報なし）
-    function boardToFumenURL(boardB) {
-        const fieldStr = boardToFumenFieldString(boardB);
-        const field = tetrisFumen.Field.create(fieldStr);
-        const pages = [{ field }];
-        const fumen = tetrisFumen.encoder.encode(pages);
-
-        return `https://knewjade.github.io/fumen-for-mobile/#?d=${fumen}`;
-    }
-
-    // ボードをFumen URLに変換（ネクスト情報あり）
+    // ボードをFumen URLに変換
     function boardToFumenURLWithNext(boardB, currentPiece, nextQueue) {
         const fieldStr = boardToFumenFieldString(boardB);
         const field = tetrisFumen.Field.create(fieldStr);
 
         // 現在のミノとネクストを別々に処理
         const currentType = pieceToType(currentPiece);
-        const nextTypes = convertPiecesToTypes(nextQueue).filter(type => type !== null);
+        const nextTypes = convertPiecesToTypes(nextQueue);
 
         // ネクスト情報をコメント形式で作成: #Q=[](現在のミノ)ネクスト
         let nextComment = '';
